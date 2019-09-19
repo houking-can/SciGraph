@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+Paper Graph
+{% endblock %}
+
+{% block header %}
+<!-- Header -->
+<header class="masthead">
+	<div class="container d-flex h-100 align-items-center">
+		<div class="mx-auto text-center">
+			<h1 class="mx-auto my-0 text-uppercase">Paper Graph</h1>
+			<h2 class="text-white-50 mx-auto mt-2 mb-5">
+				A website extracts information of a paper and constructs knowledge graph based on its body.
+			</h2>
+			{% if user.is_authenticated %}
+			{% if user.is_superuser %}
+			<a href="{% url 'upload_history_admin' adminname=user.username %}"
+				class="btn btn-primary js-scroll-trigger">
+				Get started
+			</a>
+			{% else %}
+			<a href="{% url 'upload_history_user' username=user.username %}" class="btn btn-primary js-scroll-trigger">
+				Get started
+			</a>
+			{% endif %}
+			{% else %}
+			<a href="{% url 'login' %}" class="btn btn-primary js-scroll-trigger">
+				Get started
+			</a>
+			{% endif %}
+		</div>
+	</div>
+</header>
+{% endblock %}
+<!-- About Section -->
+{% block navigation %}
+<section id="about" class="about-section text-center">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 mx-auto">
+				<h2 class="text-white mb-4">Data extraction and mining</h2>
+				<p class="text-white-50">
+					Paper Graph processes PDF directly, it extracts metadata and content of a paper.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

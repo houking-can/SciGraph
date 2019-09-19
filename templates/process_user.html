@@ -1,0 +1,135 @@
+{% extends 'process_base.html' %}
+
+{% block nav %}
+<nav class="probootstrap-nav">
+    <ul>
+        <li class="probootstrap-animate active" data-animate-effect="fadeInLeft">
+            <a href="{% url 'upload_history_user' username=user.username %}">Upload history</a>
+        </li>
+        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+            <a href="{% url 'upload_image' %}?way=local">Upload local paper</a>
+        </li>
+        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+            <a href="{% url 'upload_image' %}?way=online">Upload online paper</a>
+        </li>
+        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-images">Delete chosen papers</a>
+        </li>
+        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+            <a href="{% url 'logout' %}">Log out</a>
+        </li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block cards %}
+<div class="card-columns">
+    {% for post in object_list %}
+    <div class="card">
+        <p>&ensp;{{ post.title }}&ensp;</p>
+        <input type="checkbox" value="{{ post.pk }}">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#image{{ post.pk }}">
+            delete
+        </button>
+        {% if post.cover %}
+        <a href="{% url 'detail' pk=post.pk %}">
+            <img class="card-img-top probootstrap-animate" src="{{ post.cover.url }}" alt="{{ post.title }}"
+                data-animate-effect="fadeIn">
+        </a>
+        {% else %}
+        <a href="#">
+            <img class="card-img-top probootstrap-animate" src="" alt="{{ post.title }}" data-animate-effect="fadeIn">
+        </a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <h1 class="mb-3">
+        Nothing found, try to upload a paper!
+    </h1>
+    {% endfor %}
+
+    {% for post in object_list %}
+    <div class="modal fade" id="image{{ post.pk }}" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="close-span" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete "{{ post }}" ?
+                </div>
+                <div class="modal-footer">
+                    <script>
+                        function confirm(pk, token) {
+                            id = parseInt(pk)
+                            $.post("{% url 'delete_image' pk=post.pk %}", { pk: id, csrfmiddlewaretoken: token }, function (res) {
+                                if (!res.result) {
+                                    alert(res.message)
+                                }
+                                location.reload()
+                            })
+                        }
+                    </script>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary yes" id="{{ post.pk }}" value="{{ csrf_token }}"
+                        onclick="confirm(this.id, this.value);">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="modal fade" id="delete-images" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="close-span" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete these images ?
+                </div>
+                <div class="modal-footer">
+                    <script>
+                        function confirms(token) {
+                            var ids = $.map($('input:checked'), function (input) {
+                                return $(input).val()
+                            }).join(',')
+
+                            if (!ids) {
+                                alert('Please select at least one record!')
+                                return
+                            }
+
+                            $.post(".", { ids: ids, csrfmiddlewaretoken: token }, function (res) {
+                                if (!res.result) {
+                                    alert(res.message)
+                                }
+                                location.reload()
+                            })
+                        }
+                    </script>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary yes" value="{{ csrf_token }}"
+                        onclick="confirms(this.value);">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if object_list %}
+<form method="get">
+    Title: <input type="text" name="title">
+    Start day: <input type="datetime-local" name="startday">
+    End day: <input type="datetime-local" name="endday">
+    <button class="btn btn-primary" type="submit">search</button><br>
+</form>
+{% endif %}
+{% endblock %}
