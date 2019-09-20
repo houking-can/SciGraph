@@ -71,7 +71,7 @@ h1, h2, h3, h4, h5,
       text-decoration: none;
       color: #000;
       color: #1FAD9F;
-      text-transform: uppercase;
+      /*text-transform: uppercase;*/
       letter-spacing: .05em; }
   .probootstrap-aside .probootstrap-nav {
     padding-left: 30px; }

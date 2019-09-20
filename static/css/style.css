@@ -92,7 +92,7 @@ h5,
   text-decoration: none;
   color: #000;
   color: #1fad9f;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   letter-spacing: 0.05em;
 }
 .probootstrap-aside .probootstrap-nav {

@@ -1,2 +1,2 @@
-# PaperGraph
+# SciGraph
 None
