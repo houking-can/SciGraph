@@ -43,9 +43,9 @@
         {% endif %}
     </div>
     {% empty %}
-    <h1 class="mb-3">
+    <p>
         Nothing found!
-    </h1>
+    </p>
     {% endfor %}
 
     {% for post in object_list %}
@@ -126,10 +126,11 @@
 </div>
 {% if object_list %}
 <form method="get">
-    Title: <input type="text" name="title">
-    Start day: <input type="datetime-local" name="startday">
-    End day: <input type="datetime-local" name="endday">
-    <button class="btn btn-primary" type="submit">search</button><br>
+    Title: <input type="text" name="title"><button class="btn btn-primary" type="submit">search</button>
+{#    Start day: <input type="datetime-local" name="startday">#}
+{#    End day: <input type="datetime-local" name="endday">#}
+
+
 </form>
 {% endif %}
 {% endblock %}

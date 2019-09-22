@@ -47,12 +47,12 @@
 						<a class="nav-link js-scroll-trigger" href="#demo">Demo</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link js-scroll-trigger" href="#signup">Contact</a>
+						<a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
 					</li>
 					{% if user.is_authenticated %}
 					<li class="nav-item">
 						<a class="nav-link js-scroll-trigger" href="">
-							{{ user.username }}
+                          {{ user.username }}
 						</a>
 					</li>
 					<li class="nav-item">
@@ -154,9 +154,30 @@
 		</div>
 	</section>
 
-	<!-- Signup Section -->
-	<section id="signup" class="signup-section">
-		<div class="container">
+{#	<!-- Signup Section -->#}
+{#	<section id="subscribe" class="signup-section">#}
+{#		<div class="container">#}
+{#			<div class="row">#}
+{#				<div class="col-md-10 col-lg-8 mx-auto text-center">#}
+{#					<i class="far fa-paper-plane fa-2x mb-2 text-white"></i>#}
+{#					<h2 class="text-white mb-5">Subscribe to receive updates!</h2>#}
+{##}
+{#					<form class="form-inline d-flex">#}
+{#						<input type="email" class="form-control flex-fill mr-0 mr-sm-2 mb-3 mb-sm-0" id="inputEmail"#}
+{#							placeholder="Enter email address..." />#}
+{#						<button type="submit" class="btn btn-primary mx-auto">#}
+{#							Subscribe#}
+{#						</button>#}
+{#					</form>#}
+{#				</div>#}
+{#			</div>#}
+{#		</div>#}
+{#	</section>#}
+
+	<!-- Contact Section -->
+	<section id="contact"  class="signup-section">
+
+        <div style="margin-bottom: 100px" class="container">
 			<div class="row">
 				<div class="col-md-10 col-lg-8 mx-auto text-center">
 					<i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
@@ -172,17 +193,14 @@
 				</div>
 			</div>
 		</div>
-	</section>
 
-	<!-- Contact Section -->
-	<section class="contact-section bg-black">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 mb-3 mb-md-0">
-					<div class="card py-4 h-100">
+					<div class="card py-4 h-80">
 						<div class="card-body text-center">
 							<i class="fas fa-map-marked-alt"></i>
-							<h4 class="m-0">Address</h4>
+							<h5 class="m-0">Address</h5>
 							<hr class="my-4" />
 							<div class="small text-black-50">Beijing, China</div>
 						</div>
@@ -190,10 +208,10 @@
 				</div>
 
 				<div class="col-md-4 mb-3 mb-md-0">
-					<div class="card py-4 h-100">
+					<div class="card py-4 h-80">
 						<div class="card-body text-center">
 							<i class="fas fa-envelope"></i>
-							<h4 class="m-0">Email</h4>
+							<h5 class="m-0">Email</h5>
 							<hr class="my-4" />
 							<div class="small text-black-50">
 								yuhoujin@outlook.com
@@ -203,10 +221,10 @@
 				</div>
 
 				<div class="col-md-4 mb-3 mb-md-0">
-					<div class="card py-4 h-100">
+					<div class="card py-4 h-80">
 						<div class="card-body text-center">
 							<i class="fab fa-github"></i>
-							<h4 class="m-0">Github</h4>
+							<h5 class="m-0">Github</h5>
 							<hr class="my-4" />
 							<div class="small text-black-50">
                                 <a href="https://github.com/houking-can">
@@ -219,14 +237,16 @@
 			</div>
 
 		</div>
+
+        <!-- Footer -->
+        <footer class="bg-black small text-center text-white-50">
+            <div class="container">
+                Copyright &copy; Houking 2019
+            </div>
+        </footer>
 	</section>
 
-	<!-- Footer -->
-	<footer class="bg-black small text-center text-white-50">
-		<div class="container">
-			Copyright &copy; Houking 2019
-		</div>
-	</footer>
+
 
 	<!-- Bootstrap core JavaScript -->
 	<script src="{% static 'bootstrap/jquery/jquery.min.js' %}"></script>

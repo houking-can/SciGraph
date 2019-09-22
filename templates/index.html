@@ -2,50 +2,58 @@
 {% load staticfiles %}
 
 {% block title %}
-SciGraph
+    SciGraph
 {% endblock %}
 
 {% block header %}
-<!-- Header -->
-<header class="masthead">
-	<div class="container d-flex h-100 align-items-center">
-		<div class="mx-auto text-center">
-			<h1 class="mx-auto my-0">SCIGRAPH</h1>
-			<h2 class="text-white-50 mx-auto mt-2 mb-5">
-				A website extracts information of a paper and constructs a knowledge graph.
-			</h2>
-			{% if user.is_authenticated %}
-			{% if user.is_superuser %}
-			<a href="{% url 'upload_history_admin' adminname=user.username %}"
-				class="btn btn-primary js-scroll-trigger">
-				Get started
-			</a>
-			{% else %}
-			<a href="{% url 'upload_history_user' username=user.username %}" class="btn btn-primary js-scroll-trigger">
-				Get started
-			</a>
-			{% endif %}
-			{% else %}
-			<a href="{% url 'login' %}" class="btn btn-primary js-scroll-trigger">
-				Get started
-			</a>
-			{% endif %}
-		</div>
-	</div>
-</header>
+    <!-- Header -->
+    <header class="masthead">
+        <div class="container d-flex h-100 align-items-center">
+            <div class="mx-auto text-center">
+                <h1 class="mx-auto my-0">SCIGRAPH</h1>
+                <h2 style="color: white" class="mx-auto mt-2 mb-5">
+                    Make Scientific Literature
+                    <span style="color: #02b0e5">
+                    Structured
+                </span>
+                </h2>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <a href="{% url 'upload_history_admin' adminname=user.username %}"
+                           class="btn btn-primary js-scroll-trigger">
+                            Get started
+                        </a>
+                    {% else %}
+                        <a href="{% url 'upload_history_user' username=user.username %}"
+                           class="btn btn-primary js-scroll-trigger">
+                            Get started
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary js-scroll-trigger">
+                        Get started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
 {% endblock %}
 <!-- About Section -->
 {% block navigation %}
-<section id="about" class="about-section text-center">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 mx-auto">
-				<h2 class="text-white mb-4">Construct graph based on a scientific paper</h2>
-				<p class="text-white-50">
-					SciGraph processes PDF directly, extracts metadata and content.
-				</p>
-			</div>
-		</div>
-	</div>
-</section>
+    <section id="about" class="about-section text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 style="text-align: center" class="text-white mb-4">Construct graph based on a scientific paper</h2>
+                    <p  style="text-align: justify" class="text-white-50">
+                        Scigraph is a data mining framework, the input is scientific literature in PDF format.
+                        Scigraph extracts important information about the literature, including metadata, text, and forms.
+                        In addition, Scigraph identifies the Paper, Method, Problem, Limitation entities etc.,
+                        then it extracts the relationships between entities, and constructs the knowledge graph of a specific paper.
+                        After knowledge fusion, we can construct academic domain knowledge graph in the future.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
