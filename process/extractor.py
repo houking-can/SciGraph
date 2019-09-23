@@ -212,28 +212,4 @@ class Extractor(object):
         self.outline = outline
 
 
-if __name__ == "__main__":
-    root_path = r'E:\DATASET\conference\ACL-HTML'
-    save_path = r'C:\Users\Houking\Desktop\ACL-JSON'
-    parent = os.listdir(root_path)
-    files = [os.path.join(root_path, each) for each in parent if each.endswith('.html')]
-    for file_id, file in enumerate(files):
-        print(file_id, file)
-        E = Extractor(root_path, file)
-        E.get_metadata()
-        E.get_content()
-        if E.has_metadata and E.has_content:
-            print("Extract completely!")
-            data = {'title': E.title,
-                    'author': E.author,
-                    'institute': E.institute,
-                    'journal': E.journal,
-                    'abstract': E.abstract,
-                    'outline': E.outline,
-                    'content': E.content
-                    }
-            file_name = os.path.basename(file)[:-5]
-            save_name = os.path.join(save_path, file_name + '.json')
-            json.dump(data, open(save_name, 'w', encoding='utf-8'), indent=4, ensure_ascii=False)
-        else:
-            print("has_metadata: %r, has_content: %r" % (E.has_metadata, E.has_content))
+
