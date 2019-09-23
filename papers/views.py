@@ -86,7 +86,7 @@ class UserSpecifiedHistoryView(LoginRequiredMixin, ListView):
         return queryset.filter(user=user)
 
 
-class UploadImageView(LoginRequiredMixin, CreateView):
+class UploadPDFView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = UploadForm
     template_name = "upload.html"
@@ -143,7 +143,7 @@ class ImageOperationView(LoginRequiredMixin, DetailView):
             return JsonResponse({"result": True})
 
 
-class DeleteImageView(LoginRequiredMixin, DeleteView):
+class DeletePDFView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "delete.html"
 
@@ -169,7 +169,7 @@ class DeleteOptView(LoginRequiredMixin, DeleteView):
             return JsonResponse({"result": False})
 
 
-class DeleteImagesView(LoginRequiredMixin, DeleteView):
+class DeletePDFsView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "delete.html"
     success_url = reverse_lazy("upload_history")

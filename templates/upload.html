@@ -17,7 +17,7 @@
             <div style="color: white; ">
                 {{ form.title.label_tag }}<br>
             </div>
-            {{ form.title }}<br>
+            {{ form.title }}<br><br>
             <div style="color: white; ">
                 {{ form.cover.label_tag }}<br>
             </div>
@@ -32,6 +32,7 @@
                 {{ form.url.label_tag }}<br>
             </div>
             {{ form.url }}<br>
+
         {% endif %}
         {% for post in form %}
             {% for error in post.errors %}

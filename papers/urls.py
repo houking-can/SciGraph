@@ -1,20 +1,20 @@
 from django.urls import path
 from . import views
 from .views import (
-    UploadImageView,
+    UploadPDFView,
     UserUploadHistoryView,
     AdminUploadHistoryView,
     UserSpecifiedHistoryView,
     ImageOperationView,
-    DeleteImageView,
-    DeleteImagesView,
+    DeletePDFView,
+    DeletePDFsView,
     DeleteOptView,
 )
 
 
 urlpatterns = [
     path("", views.index, name="papers_index"),
-    path("upload/", UploadImageView.as_view(), name="upload_image"),
+    path("upload/", UploadPDFView.as_view(), name="upload_pdf"),
     path(
         "process/history/user/<username>/",
         UserUploadHistoryView.as_view(),
@@ -31,8 +31,8 @@ urlpatterns = [
         name="upload_history_specified",
     ),
     path("process/detail/<pk>/", ImageOperationView.as_view(), name="detail"),
-    path("process/delete/image/<pk>/", DeleteImageView.as_view(), name="delete_image"),
-    path("process/delete/images/", DeleteImagesView.as_view(), name="delete_images"),
+    path("process/delete/image/<pk>/", DeletePDFView.as_view(), name="delete_image"),
+    path("process/delete/images/", DeletePDFsView.as_view(), name="delete_images"),
     path(
         "process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"
     ),

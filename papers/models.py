@@ -1,14 +1,18 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.core.files.base import ContentFile
 import os
+
 import requests
+from django.contrib.auth.models import User
+from django.core import validators
+from django.core.files.base import ContentFile
+from django.db import models
 
 
 class Post(models.Model):
     url = models.URLField(max_length=200, default="", blank=True)
     title = models.CharField(max_length=200)
-    cover = models.ImageField(upload_to="images/", default=None, blank=True)
+    cover = models.FileField(upload_to="pdf/", validators=[validators.FileExtensionValidator(['pdf'],
+	     message='file must be pdf')])
+    # cover = models.ImageField(upload_to="images/", default=None, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
@@ -29,3 +33,4 @@ class Operation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length=200)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None)
+
