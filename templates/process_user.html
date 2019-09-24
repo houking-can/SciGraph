@@ -115,7 +115,7 @@
                                     return
                                 }
 
-                                $.post(".", {ids: ids, csrfmiddlewaretoken: token}, function (res) {
+                                $.post("{% url 'delete_pdfs'%} ", {ids: ids, csrfmiddlewaretoken: token}, function (res) {
                                     if (!res.result) {
                                         alert(res.message)
                                     }

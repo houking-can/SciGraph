@@ -10,7 +10,7 @@ from .models import Post, Operation
 from process.face_recognition import recognize
 from process.img_seg import segmentation
 from process.classification import classify
-
+import os
 
 def index(request):
     return render(request, "index.html")
@@ -150,7 +150,12 @@ class DeletePDFView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         try:
             pk = self.request.POST["pk"]
-            Post.objects.get(pk=pk).delete()
+            post_obj = Post.objects.get(pk=pk)
+            try:
+                os.remove('media/'+post_obj.cover.name)
+            except:
+                pass
+            post_obj.delete()
             return JsonResponse({"result": True})
         except Exception as e:
             return JsonResponse({"result": False})
@@ -180,7 +185,13 @@ class DeletePDFsView(LoginRequiredMixin, DeleteView):
             if ids:
                 ids = ids.split(",")
             ids = [int(id) for id in ids]
-            Post.objects.filter(pk__in=ids).delete()
+            post_objs = Post.objects.filter(pk__in=ids)
+            for obj in post_objs:
+                try:
+                    os.remove('media/'+obj.cover.name)
+                except:
+                    pass
+            post_objs.delete()
             return JsonResponse({"result": True})
         except Exception as e:
             return super().post(request, *args, **kwargs)

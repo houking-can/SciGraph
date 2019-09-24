@@ -5,4 +5,4 @@ None
 - python3.7
 - pypiwin32
 - BeautifulSoup4
-- pdf.js
+- [pdf.js]( http://mozilla.github.io/pdf.js/)
