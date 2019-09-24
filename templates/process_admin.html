@@ -25,7 +25,7 @@
             <a href="{% url 'upload_history_admin' adminname=user.username%}">All history</a>
         </li>
         <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-            <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-images">Delete chosen images</a>
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-pdfs">Delete chosen pdfs</a>
         </li>
         {% for usr in user_list %}
         <li class="probootstrap-animate" id="nav-{{ usr.username }}" data-animate-effect="fadeInLeft">
@@ -48,7 +48,7 @@
     <div class="card">
         <p>{{ post.created }}&ensp;{{ post.title }}&ensp;</p>
         <input type="checkbox" value="{{ post.pk }}">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#image{{ post.pk }}">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pdf{{ post.pk }}">
             delete
         </button>
         {% if post.cover %}
@@ -69,7 +69,7 @@
     {% endfor %}
 
     {% for post in object_list %}
-    <div class="modal fade" id="image{{ post.pk }}" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    <div class="modal fade" id="pdf{{ post.pk }}" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
         data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -86,7 +86,7 @@
                     <script>
                         function confirm(pk, token) {
                             id = parseInt(pk)
-                            $.post("{% url 'delete_image' pk=post.pk %}", { pk: id, csrfmiddlewaretoken: token }, function (res) {
+                            $.post("{% url 'delete_pdf' pk=post.pk %}", { pk: id, csrfmiddlewaretoken: token }, function (res) {
                                 if (!res.result) {
                                     alert(res.message)
                                 }
@@ -101,7 +101,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="delete-images" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    <div class="modal fade" id="delete-pdfs" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
         data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

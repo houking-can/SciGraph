@@ -5,7 +5,7 @@ from .views import (
     UserUploadHistoryView,
     AdminUploadHistoryView,
     UserSpecifiedHistoryView,
-    ImageOperationView,
+    PDFOperationView,
     DeletePDFView,
     DeletePDFsView,
     DeleteOptView,
@@ -30,9 +30,9 @@ urlpatterns = [
         UserSpecifiedHistoryView.as_view(),
         name="upload_history_specified",
     ),
-    path("process/detail/<pk>/", ImageOperationView.as_view(), name="detail"),
-    path("process/delete/image/<pk>/", DeletePDFView.as_view(), name="delete_image"),
-    path("process/delete/images/", DeletePDFsView.as_view(), name="delete_images"),
+    path("process/detail/<pk>/", PDFOperationView.as_view(), name="detail"),
+    path("process/delete/PDF/<pk>/", DeletePDFView.as_view(), name="delete_pdf"),
+    path("process/delete/PDF/", DeletePDFsView.as_view(), name="delete_pdfs"),
     path(
         "process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"
     ),

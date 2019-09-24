@@ -101,7 +101,7 @@ class UploadPDFView(LoginRequiredMixin, CreateView):
         )
 
 
-class ImageOperationView(LoginRequiredMixin, DetailView):
+class PDFOperationView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = "detail.html"
     context_object_name = "obj"
