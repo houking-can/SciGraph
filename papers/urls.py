@@ -9,6 +9,8 @@ from .views import (
     DeletePDFView,
     DeletePDFsView,
     DeleteOptView,
+    # PDFPreviewView,
+
 )
 
 
@@ -36,4 +38,5 @@ urlpatterns = [
     path(
         "process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"
     ),
+    # path('process/preview/', PDFPreviewView.as_view(), name="preview_pdf")
 ]

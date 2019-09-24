@@ -184,3 +184,7 @@ class DeletePDFsView(LoginRequiredMixin, DeleteView):
             return JsonResponse({"result": True})
         except Exception as e:
             return super().post(request, *args, **kwargs)
+
+# class PDFPreviewView(LoginRequiredMixin, View):
+#     model = Post
+#     template_name = 'viewer.html'

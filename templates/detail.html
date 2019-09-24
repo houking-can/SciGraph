@@ -2,172 +2,182 @@
 {% load staticfiles %}
 
 {% block nav %}
-<script>
-    function PDFProcess(operation, token) {
-        $('.probootstrap-animate.active').removeClass('active')
-        $('#nav-' + operation).addClass('active')
-        $.post('.', { operation: operation, csrfmiddlewaretoken: token }, function success(res) {
-            result = res['result']
-            if (result) {
-                if (operation != 'classification') {
-                    path = res['path']
-                    img = `<p class="mb-5"><img src="${path}" alt="result" class="img-fluid mx-auto d-block"></p>`
-                    $('#card-div').append(img)
-                } else {
-                    guess = res['guess']
-                    $('#card-div').append(`<h4 align="center"> Top 5 models predicted:</h4 > `)
-                    for (var i = 0; i < 5; i++) {
-                        $('#card-div').append(`<p class="mb-5" align="center">${guess['classes'][i]}:  ${guess['percentages'][i]}%</p >`)
+    <script>
+        function PDFProcess(operation, token) {
+            $('.probootstrap-animate.active').removeClass('active')
+            $('#nav-' + operation).addClass('active')
+            $.post('.', {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
+                result = res['result']
+                if (result) {
+                    if (operation != 'classification') {
+                        path = res['path']
+                        img = `<p class="mb-5"><img src="${path}" alt="result" class="img-fluid mx-auto d-block"></p>`
+                        $('#card-div').append(img)
+                    } else {
+                        guess = res['guess']
+                        $('#card-div').append(`<h4 align="center"> Top 5 models predicted:</h4 > `)
+                        for (var i = 0; i < 5; i++) {
+                            $('#card-div').append(`<p class="mb-5" align="center">${guess['classes'][i]}:  ${guess['percentages'][i]}%</p >`)
+                        }
                     }
+                } else {
+                    alert('no face recognized!')
                 }
-            } else {
-                alert('no face recognized!')
-            }
-        })
-    }
-</script>
-<nav class="probootstrap-nav">
-    <ul>
-        <li class="probootstrap-animate active" id="nav-detail" data-animate-effect="fadeInLeft">
-            <a href="">Detail</a>
-        </li>
-        <li class="probootstrap-animate" id="nav-recognition" data-animate-effect="fadeInLeft">
-            <a href="javascript:void(0);" name="recognition" title="{{ csrf_token }}"
-                onclick="PDFProcess(this.name, this.title)">Face recognition</a>
-        </li>
-        <li class="probootstrap-animate" id="nav-segmentation" data-animate-effect="fadeInLeft">
-            <a href="javascript:void(0);" name="segmentation" title="{{ csrf_token }}"
-                onclick="PDFProcess(this.name, this.title)">Segmentation</a>
-        </li>
-        <li class="probootstrap-animate" id="nav-classification" data-animate-effect="fadeInLeft">
-            <a href="javascript:void(0);" name="classification" title="{{ csrf_token }}"
-                onclick="PDFProcess(this.name, this.title)">
-                Classification</a>
-        </li>
-        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-            {% if user.is_superuser %}
-            <a href="{% url 'upload_history_admin' adminname=user.username %}">Back</a>
-            {% else %}
-            <a href="{% url 'upload_history_user' username=user.username %}">Back</a>
-            {% endif %}
-        </li>
-        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-            <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">Delete chosen
-                operations</a>
-        </li>
-        <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-            <a href="{% url 'logout' %}">Log out</a>
-        </li>
-    </ul>
-</nav>
+            })
+        }
+    </script>
+    <nav class="probootstrap-nav">
+        <ul>
+            <li class="probootstrap-animate active" id="nav-detail" data-animate-effect="fadeInLeft">
+                <a href="">Detail</a>
+            </li>
+            <li class="probootstrap-animate" id="nav-extraction" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" name="extraction" title="{{ csrf_token }}"
+                   onclick="PDFProcess(this.name, this.title)">Metadata Extraction</a>
+            </li>
+            <li class="probootstrap-animate" id="nav-segmentation" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" name="segmentation" title="{{ csrf_token }}"
+                   onclick="PDFProcess(this.name, this.title)">Segmentation</a>
+            </li>
+            <li class="probootstrap-animate" id="nav-classification" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" name="classification" title="{{ csrf_token }}"
+                   onclick="PDFProcess(this.name, this.title)">
+                    Classification</a>
+            </li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                {% if user.is_superuser %}
+                    <a href="{% url 'upload_history_admin' adminname=user.username %}">Back</a>
+                {% else %}
+                    <a href="{% url 'upload_history_user' username=user.username %}">Back</a>
+                {% endif %}
+            </li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">Delete chosen
+                    operations</a>
+            </li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                <a href="{% url 'logout' %}">Log out</a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}
 
 
 {% block card %}
 
-{% for opt in obj.operation_set.all %}
-<div class="modal fade" id="operation" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
-    data-backdrop="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span class="close-span" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Sure to delete this history operation record ?
-            </div>
-            <div class="modal-footer">
-                <script>
-                    function confirm(pk, token) {
-                        id = parseInt(pk)
-                        $.post("{% url 'delete_opt' pk=opt.pk %}", { pk: id, csrfmiddlewaretoken: token }, function (res) {
-                            if (!res.result) {
-                                alert(res.message)
+    {% for opt in obj.operation_set.all %}
+        <div class="modal fade" id="operation" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+             data-backdrop="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="close-span" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Sure to delete this history operation record ?
+                    </div>
+                    <div class="modal-footer">
+                        <script>
+                            function confirm(pk, token) {
+                                id = parseInt(pk)
+                                $.post("{% url 'delete_opt' pk=opt.pk %}", {
+                                    pk: id,
+                                    csrfmiddlewaretoken: token
+                                }, function (res) {
+                                    if (!res.result) {
+                                        alert(res.message)
+                                    }
+                                    location.reload()
+                                })
                             }
-                            location.reload()
-                        })
-                    }
-                </script>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary yes" id="{{ opt.pk }}" value="{{ csrf_token }}"
-                    onclick="confirm(this.id, this.value);">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-
-
-<div class="modal fade" id="delete-operations" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
-    data-backdrop="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span class="close-span" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete these operations ?
-            </div>
-            <div class="modal-footer">
-                <script>
-                    function confirms(token) {
-                        var ids = $.map($('input:checked'), function (input) {
-                            return $(input).val()
-                        }).join(',')
-
-                        if (!ids) {
-                            alert('Please select at least one operation!')
-                            return
-                        }
-
-                        $.post(".", { ids: ids, csrfmiddlewaretoken: token }, function (res) {
-                            if (!res.result) {
-                                alert(res.message)
-                            }
-                            location.reload()
-                        })
-                    }
-                </script>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary yes" value="{{ csrf_token }}"
-                    onclick="confirms(this.value);">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-xl-8 col-lg-12" id="card-div">
-            <div class="row">
-                <div class="col-xl-8 col-lg-12 mx-auto">
-                    <h4 align="center">Title: {{ obj.title }}</h4>
-                    <h5 align="center">Created at: {{ obj.created }}</h5>
-                    {% if obj.operation_set.all %}
-                    <h5 align="center">History operation: {{ obj.updated }}</h5>
-                    {% endif %}
+                        </script>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary yes" id="{{ opt.pk }}" value="{{ csrf_token }}"
+                                onclick="confirm(this.id, this.value);">Yes
+                        </button>
+                    </div>
                 </div>
             </div>
-            {% for opt in obj.operation_set.all %}
-            <p style="display: inline;">
-                {{ opt.type }} at {{ opt.created }}
-            </p>
-            <input type="checkbox" value="{{ opt.pk }}">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#operation">
-                delete
-            </button><br>
-            {% endfor %}
+        </div>
+    {% endfor %}
 
-{#            <p class="mb-5">#}
-{#                <img src="{{ obj.cover.url }}" alt="{{ obj.title }}" class="img-fluid mx-auto d-block">#}
-{#            </p>#}
+
+    <div class="modal fade" id="delete-operations" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="close-span" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete these operations ?
+                </div>
+                <div class="modal-footer">
+                    <script>
+                        function confirms(token) {
+                            var ids = $.map($('input:checked'), function (input) {
+                                return $(input).val()
+                            }).join(',')
+
+                            if (!ids) {
+                                alert('Please select at least one operation!')
+                                return
+                            }
+
+                            $.post(".", {ids: ids, csrfmiddlewaretoken: token}, function (res) {
+                                if (!res.result) {
+                                    alert(res.message)
+                                }
+                                location.reload()
+                            })
+                        }
+                    </script>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary yes" value="{{ csrf_token }}"
+                            onclick="confirms(this.value);">Yes
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-12" id="card-div">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 mx-auto">
+                        <h4 align="center">Title: {{ obj.title }}</h4>
+                        <h5 align="center">Created at: {{ obj.created }}</h5>
+                        {% if obj.operation_set.all %}
+                            <h5 align="center">History operation: {{ obj.updated }}</h5>
+                        {% endif %}
+                        <h5 align="center">
+                            <a style="align:center"
+                               href="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}">Preview
+                            </a>
+                        </h5>
+                    </div>
+                </div>
+                {% for opt in obj.operation_set.all %}
+                    <p style="display: inline;">
+                        {{ opt.type }} at {{ opt.created }}
+                    </p>
+                    <input type="checkbox" value="{{ opt.pk }}">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#operation">
+                        delete
+                    </button><br>
+                {% endfor %}
+
+                {#            <p class="mb-5">#}
+                {#                <img src="{{ obj.cover.url }}" alt="{{ obj.title }}" class="img-fluid mx-auto d-block">#}
+                {#            </p>#}
+            </div>
+        </div>
+    </div>
 {% endblock %}
