@@ -9,9 +9,9 @@ from django.db import models
 
 class Post(models.Model):
     url = models.URLField(max_length=200, default="", blank=True)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200,blank=True)
     cover = models.FileField(upload_to="pdf/", validators=[validators.FileExtensionValidator(['pdf'],
-	     message='file must be pdf')])
+	     message='file must be pdf')],blank=False)
     # cover = models.ImageField(upload_to="images/", default=None, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
@@ -23,6 +23,8 @@ class Post(models.Model):
                 self.cover.save(os.path.basename(self.url), ContentFile(response.content), save=True)
             else:
                 pass
+        if self.title=='':
+            self.title = self.cover.name
         super().save(*args, **kwargs)
 
     def __str__(self):

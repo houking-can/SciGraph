@@ -3,7 +3,7 @@
 
 {% block nav %}
 <script>
-    function imageProcess(operation, token) {
+    function PDFProcess(operation, token) {
         $('.probootstrap-animate.active').removeClass('active')
         $('#nav-' + operation).addClass('active')
         $.post('.', { operation: operation, csrfmiddlewaretoken: token }, function success(res) {
@@ -33,15 +33,15 @@
         </li>
         <li class="probootstrap-animate" id="nav-recognition" data-animate-effect="fadeInLeft">
             <a href="javascript:void(0);" name="recognition" title="{{ csrf_token }}"
-                onclick="imageProcess(this.name, this.title)">Face recognition</a>
+                onclick="PDFProcess(this.name, this.title)">Face recognition</a>
         </li>
         <li class="probootstrap-animate" id="nav-segmentation" data-animate-effect="fadeInLeft">
             <a href="javascript:void(0);" name="segmentation" title="{{ csrf_token }}"
-                onclick="imageProcess(this.name, this.title)">Segmentation</a>
+                onclick="PDFProcess(this.name, this.title)">Segmentation</a>
         </li>
         <li class="probootstrap-animate" id="nav-classification" data-animate-effect="fadeInLeft">
             <a href="javascript:void(0);" name="classification" title="{{ csrf_token }}"
-                onclick="imageProcess(this.name, this.title)">
+                onclick="PDFProcess(this.name, this.title)">
                 Classification</a>
         </li>
         <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
@@ -164,9 +164,9 @@
             </button><br>
             {% endfor %}
 
-            <p class="mb-5">
-                <img src="{{ obj.cover.url }}" alt="{{ obj.title }}" class="img-fluid mx-auto d-block">
-            </p>
+{#            <p class="mb-5">#}
+{#                <img src="{{ obj.cover.url }}" alt="{{ obj.title }}" class="img-fluid mx-auto d-block">#}
+{#            </p>#}
         </div>
     </div>
 </div>

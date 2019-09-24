@@ -34,7 +34,7 @@
                 </button>
                 {% if post.cover %}
                     <a href="{% url 'detail' pk=post.pk %}" style="text-align: center; color: blue">
-                        Build KG
+                        GoGoGo!
                     </a>
                 {% else %}
                     <a href="#">
@@ -133,13 +133,11 @@
         </div>
     </div>
     {% if object_list %}
-        <form method="get">
-            Title: <input type="text" name="title">
+        <form method="get" style="font-size: medium; color: #1b1e21">
+            Title:&emsp;&emsp;&ensp; <input type="text" name="title" ><br><br>
+            Start day: <input type="datetime-local" name="startday">
+            End day: <input type="datetime-local" name="endday">
             <button class="btn btn-primary" type="submit">search</button>
-            {#    Start day: <input type="datetime-local" name="startday">#}
-            {#    End day: <input type="datetime-local" name="endday">#}
-
-
         </form>
     {% endif %}
 {% endblock %}
