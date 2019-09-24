@@ -148,9 +148,9 @@
             <div class="row">
                 <div class="col-xl-8 col-lg-12 mx-auto">
                     <h4 align="center">Title: {{ obj.title }}</h4>
-                    <h4 align="center">Created at: {{ obj.created }}</h4>
+                    <h5 align="center">Created at: {{ obj.created }}</h5>
                     {% if obj.operation_set.all %}
-                    <h4 align="center">History operation: {{ obj.updated }}</h4>
+                    <h5 align="center">History operation: {{ obj.updated }}</h5>
                     {% endif %}
                 </div>
             </div>
