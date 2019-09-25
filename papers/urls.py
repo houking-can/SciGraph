@@ -10,6 +10,7 @@ from .views import (
     DeletePDFsView,
     DeleteOptView,
     DeleteOptsView,
+    OptHistoryView
 
 )
 
@@ -37,5 +38,6 @@ urlpatterns = [
     path(
         "process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"
     ),
-    path('process/delete/operation/', DeleteOptsView.as_view(), name="delete_opts")
+    path('process/delete/operation/', DeleteOptsView.as_view(), name="delete_opts"),
+    path("process/opt_history/<pk>/", OptHistoryView.as_view(),name="opt_history")
 ]

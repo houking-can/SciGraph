@@ -6,7 +6,7 @@
         function PDFProcess(operation, token) {
             $('.probootstrap-animate.active').removeClass('active')
             $('#nav-' + operation).addClass('active')
-            $.post(".", {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
+            $.post("{% url 'detail' pk=obj.pk %}", {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
                 result = res['result']
                 if (result) {
                     if (operation == 'extraction') {
@@ -23,8 +23,8 @@
 
     <nav class="probootstrap-nav">
         <ul>
-            <li class="probootstrap-animate active" id="nav-preview" data-animate-effect="fadeInLeft">
-                <a href="">Preview</a>
+            <li class="probootstrap-animate" id="nav-preview" data-animate-effect="fadeInLeft">
+                <a href="{% url 'detail' pk=obj.pk %}">Preview</a>
             </li>
             <li class="probootstrap-animate" id="nav-extraction" data-animate-effect="fadeInLeft">
                 <a href="javascript:void(0);" name="extraction" title="{{ csrf_token }}"
@@ -34,9 +34,8 @@
                 <a href="javascript:void(0);" name="buildkg" title="{{ csrf_token }}"
                    onclick="PDFProcess(this.name, this.title)">Build KG</a>
             </li>
-            <li class="probootstrap-animate" id="nav-history" data-animate-effect="fadeInLeft">
-                <a href="{% url 'opt_history' pk=obj.pk %}">
-                    Operation History</a>
+            <li class="probootstrap-animate active" id="nav-history" data-animate-effect="fadeInLeft">
+                <a href="">Operation History</a>
             </li>
 
 
@@ -139,25 +138,8 @@
         </div>
     </div>
 
-    <div class="container-fluid" id="title">
-        <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-12">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-12 mx-auto">
-                        <h5 align="center">Title: {{ obj.title }}</h5>
-                        <h6 align="center">Created at: {{ obj.created }}</h6>
-                    </div>
-                </div>
-            </div>
-            <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
-                    name="pdf_preview" Height="600px" width="840px">
-            </iframe>
-        </div>
-    </div>
 
-
-
-    <div class="container-fluid" id="history" style="display: none">
+    <div class="container-fluid" id="history">
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-12" id="card-div">
                 <div class="row">

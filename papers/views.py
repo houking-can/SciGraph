@@ -216,3 +216,8 @@ class DeleteOptsView(LoginRequiredMixin, DeleteView):
             return JsonResponse({"result": True})
         except Exception as e:
             return JsonResponse({"result": False, "message": str(e)})
+
+class OptHistoryView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = "history.html"
+    context_object_name = "obj"
