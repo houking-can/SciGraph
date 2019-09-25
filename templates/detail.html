@@ -146,22 +146,20 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-12" id="card-div">
                 <div class="row">
                     <div class="col-xl-8 col-lg-12 mx-auto">
-                        <h4 align="center">Title: {{ obj.title }}</h4>
-                        <h5 align="center">Created at: {{ obj.created }}</h5>
+                        <h5 align="center">Title: {{ obj.title }}</h5>
+                        <h6 align="center">Created at: {{ obj.created }}</h6>
                         {% if obj.operation_set.all %}
                             <h5 align="center">History operation: {{ obj.updated }}</h5>
                         {% endif %}
-                        <h5 align="center">
-                            <a style="align:center"
-                               href="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}">Preview
-                            </a>
-                        </h5>
+
+                        <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
+                                name="pdf_preview" Height="600px" width="840px">
+                        </iframe>
                     </div>
                 </div>
                 {% for opt in obj.operation_set.all %}
