@@ -6,26 +6,25 @@
         function PDFProcess(operation, token) {
             $('.probootstrap-animate.active').removeClass('active')
             $('#nav-' + operation).addClass('active')
-            $.post('.', {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
+            $.post(".", {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
                 result = res['result']
                 if (result) {
-                    if (operation != 'classification') {
-                        path = res['path']
-                        img = `<p class="mb-5"><img src="${path}" alt="result" class="img-fluid mx-auto d-block"></p>`
-                        $('#card-div').append(img)
-                    } else {
-                        guess = res['guess']
-                        $('#card-div').append(`<h4 align="center"> Top 5 models predicted:</h4 > `)
-                        for (var i = 0; i < 5; i++) {
-                            $('#card-div').append(`<p class="mb-5" align="center">${guess['classes'][i]}:  ${guess['percentages'][i]}%</p >`)
-                        }
+                    if (operation == 'extraction') {
+                        $('#card-div').append(`<h4 align="center"> extraction</h4>`)
+                    } else if (operation == 'buildkg') {
+                        $('#card-div').append(`<h4 align="center"> buildkg </h4>`)
+                    }else{
+                    {#    TODO 关闭preview,显示history#}
                     }
-                } else {
-                    alert('no face recognized!')
+                }
+                else {
+                    alert("Something wrong with the operation!")
                 }
             })
         }
+
     </script>
+
     <nav class="probootstrap-nav">
         <ul>
             <li class="probootstrap-animate active" id="nav-detail" data-animate-effect="fadeInLeft">
@@ -35,19 +34,17 @@
                 <a href="javascript:void(0);" name="extraction" title="{{ csrf_token }}"
                    onclick="PDFProcess(this.name, this.title)">Metadata Extraction</a>
             </li>
-            <li class="probootstrap-animate" id="nav-segmentation" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" name="segmentation" title="{{ csrf_token }}"
-                   onclick="PDFProcess(this.name, this.title)">Segmentation</a>
+            <li class="probootstrap-animate" id="nav-buildkg" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" name="buildkg" title="{{ csrf_token }}"
+                   onclick="PDFProcess(this.name, this.title)">Build KG</a>
             </li>
-            <li class="probootstrap-animate" id="nav-classification" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" name="classification" title="{{ csrf_token }}"
+            <li class="probootstrap-animate" id="nav-history" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" name="history" title="{{ csrf_token }}"
                    onclick="PDFProcess(this.name, this.title)">
-                    Classification</a>
+                    Operation History</a>
             </li>
-            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">Delete chosen
-                    operations</a>
-            </li>
+
+
             <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
                 {% if user.is_superuser %}
                     <a href="{% url 'upload_history_admin' adminname=user.username %}">Back</a>
@@ -146,7 +143,25 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
+
+    <div class="container-fluid" id="preview">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-12">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 mx-auto">
+                        <h5 align="center">Title: {{ obj.title }}</h5>
+                        <h6 align="center">Created at: {{ obj.created }}</h6>
+                    </div>
+                </div>
+            </div>
+            <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
+                    name="pdf_preview" Height="600px" width="840px">
+            </iframe>
+        </div>
+    </div>
+
+
+    <div class="container-fluid" id="opt_history">
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-12" id="card-div">
                 <div class="row">
@@ -154,10 +169,8 @@
                         <h5 align="center">Title: {{ obj.title }}</h5>
                         <h6 align="center">Created at: {{ obj.created }}</h6>
                         {% if obj.operation_set.all %}
-                            <h5 align="center">History operation: {{ obj.updated }}</h5>
+                            <h6 align="center">History operation: {{ obj.updated }}</h6>
                         {% endif %}
-
-
                     </div>
                 </div>
 
@@ -170,11 +183,15 @@
                         delete
                     </button><br>
                 {% endfor %}
-
             </div>
-            <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
-                    name="pdf_preview" Height="600px" width="840px">
-            </iframe>
+            {% if obj.operation_set.all %}
+                <button>
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">
+                        Delete Operations</a>
+                </button>
+            {% endif %}
+
         </div>
     </div>
+
 {% endblock %}

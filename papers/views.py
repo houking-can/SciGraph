@@ -7,9 +7,6 @@ from django.views.generic import CreateView, ListView, DetailView, DeleteView
 
 from .forms import UploadForm
 from .models import Post, Operation
-from process.face_recognition import recognize
-from process.img_seg import segmentation
-from process.classification import classify
 import os
 
 
@@ -112,30 +109,23 @@ class PDFOperationView(LoginRequiredMixin, DetailView):
         ids = self.request.POST.get("ids", "")
         input_path = "." + self.get_object().cover.url
 
-        if operation == "recognition":
-            path = recognize(input_path)
+        if operation == "extraction":
+            path = 'extraction ' + input_path
             opt = Operation.objects.create(
-                type="face recognition", post=self.get_object()
+                type="Metadata Extraction", post=self.get_object()
             )
             opt.save()
             if path:
                 return JsonResponse({"result": True, "path": path})
             else:
                 return JsonResponse({"result": False})
-        elif operation == "segmentation":
-            path = segmentation(input_path)
+        elif operation == "buildkg":
+            path = 'buildkg ' + input_path
             opt = Operation.objects.create(
-                type="image segmentation", post=self.get_object()
+                type="Build KG", post=self.get_object()
             )
             opt.save()
             return JsonResponse({"result": True, "path": path})
-        elif operation == "classification":
-            guess = classify(input_path)
-            opt = Operation.objects.create(
-                type="image classification", post=self.get_object()
-            )
-            opt.save()
-            return JsonResponse({"result": True, "guess": guess})
 
         if ids:
             ids = ids.split(",")
