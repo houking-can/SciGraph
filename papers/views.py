@@ -12,6 +12,7 @@ from process.img_seg import segmentation
 from process.classification import classify
 import os
 
+
 def index(request):
     return render(request, "index.html")
 
@@ -150,28 +151,15 @@ class DeletePDFView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         try:
             pk = self.request.POST["pk"]
-            post_obj = Post.objects.get(pk=pk)
+            obj = Post.objects.get(pk=pk)
             try:
-                os.remove('media/'+post_obj.cover.name)
+                os.remove('media/' + obj.cover.name)
             except:
                 pass
-            post_obj.delete()
+            obj.delete()
             return JsonResponse({"result": True})
         except Exception as e:
-            return JsonResponse({"result": False})
-
-
-class DeleteOptView(LoginRequiredMixin, DeleteView):
-    model = Operation
-    template_name = "delete.html"
-
-    def post(self, request, *args, **kwargs):
-        try:
-            pk = self.request.POST.get("pk", "")
-            Operation.objects.get(pk=pk).delete()
-            return JsonResponse({"result": True})
-        except Exception as e:
-            return JsonResponse({"result": False})
+            return JsonResponse({"result": False, "message": str(e)})
 
 
 class DeletePDFsView(LoginRequiredMixin, DeleteView):
@@ -185,17 +173,56 @@ class DeletePDFsView(LoginRequiredMixin, DeleteView):
             if ids:
                 ids = ids.split(",")
             ids = [int(id) for id in ids]
-            post_objs = Post.objects.filter(pk__in=ids)
-            for obj in post_objs:
+            objs = Post.objects.filter(pk__in=ids)
+            for obj in objs:
                 try:
-                    os.remove('media/'+obj.cover.name)
+                    os.remove('media/' + obj.cover.name)
                 except:
                     pass
-            post_objs.delete()
+            objs.delete()
             return JsonResponse({"result": True})
         except Exception as e:
-            return super().post(request, *args, **kwargs)
+            # return super().post(request, *args, **kwargs)
+            return JsonResponse({"result": False, "message": str(e)})
 
-# class PDFPreviewView(LoginRequiredMixin, View):
-#     model = Post
-#     template_name = 'viewer.html'
+
+class DeleteOptView(LoginRequiredMixin, DeleteView):
+    model = Operation
+    template_name = "delete.html"
+
+    def post(self, request, *args, **kwargs):
+        try:
+            pk = self.request.POST.get("pk", "")
+            obj = Operation.objects.get(pk=pk)
+            try:
+                name, _ = os.path.splitext(obj.post.cover.name)
+                os.remove('media/' + name + '.json')
+            except:
+                pass
+            obj.delete()
+            return JsonResponse({"result": True})
+        except Exception as e:
+            return JsonResponse({"result": False, "message": str(e)})
+
+
+class DeleteOptsView(LoginRequiredMixin, DeleteView):
+    model = Operation
+    template_name = "delete.html"
+
+    def post(self, request, *args, **kwargs):
+        try:
+            ids = self.request.POST.get("ids", "")
+            if ids:
+                ids = ids.split(",")
+            ids = [int(id) for id in ids]
+            objs = Operation.objects.filter(pk__in=ids)
+            for obj in objs:
+                try:
+                    name, _ = os.path.splitext(obj.post.cover.name)
+                    os.remove('media/' + name + '.json')
+                except:
+                    pass
+            objs.delete()
+            return JsonResponse({"result": True})
+        except Exception as e:
+            return JsonResponse({"result": False, "message": str(e)})

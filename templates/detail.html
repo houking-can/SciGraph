@@ -32,7 +32,7 @@
                 <a href="">Detail</a>
             </li>
             <li class="probootstrap-animate" id="nav-extraction" data-animate-effect="fadeInLeft">
-                <a href=" ;" name="extraction" title="{{ csrf_token }}"
+                <a href="javascript:void(0);" name="extraction" title="{{ csrf_token }}"
                    onclick="PDFProcess(this.name, this.title)">Metadata Extraction</a>
             </li>
             <li class="probootstrap-animate" id="nav-segmentation" data-animate-effect="fadeInLeft">
@@ -45,15 +45,15 @@
                     Classification</a>
             </li>
             <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">Delete chosen
+                    operations</a>
+            </li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
                 {% if user.is_superuser %}
                     <a href="{% url 'upload_history_admin' adminname=user.username %}">Back</a>
                 {% else %}
                     <a href="{% url 'upload_history_user' username=user.username %}">Back</a>
                 {% endif %}
-            </li>
-            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">Delete chosen
-                    operations</a>
             </li>
             <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
                 <a href="{% url 'logout' %}">Log out</a>
@@ -130,7 +130,7 @@
                                 return
                             }
 
-                            $.post(".", {ids: ids, csrfmiddlewaretoken: token}, function (res) {
+                            $.post("{% url 'delete_opts'%}", {ids: ids, csrfmiddlewaretoken: token}, function (res) {
                                 if (!res.result) {
                                     alert(res.message)
                                 }
@@ -157,11 +157,10 @@
                             <h5 align="center">History operation: {{ obj.updated }}</h5>
                         {% endif %}
 
-                        <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
-                                name="pdf_preview" Height="600px" width="840px">
-                        </iframe>
+
                     </div>
                 </div>
+
                 {% for opt in obj.operation_set.all %}
                     <p style="display: inline;">
                         {{ opt.type }} at {{ opt.created }}
@@ -173,6 +172,9 @@
                 {% endfor %}
 
             </div>
+            <iframe src="/static/pdf.js/web/viewer.html?file=/media/pdf/{{ obj.title }}"
+                    name="pdf_preview" Height="600px" width="840px">
+            </iframe>
         </div>
     </div>
 {% endblock %}
