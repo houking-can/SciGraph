@@ -4,9 +4,10 @@ None
 ## Dependency
 - python3.7
 
-- pypiwin32
+- pip install pywin32==223
 
 - BeautifulSoup4
+- lxml
 
 - [pdf.js]( http://mozilla.github.io/pdf.js/)
 

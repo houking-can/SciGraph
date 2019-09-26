@@ -1,18 +1,18 @@
 import os
 import threading
 import time
+import win32gui
 from os.path import exists, join
 from subprocess import Popen, PIPE, STDOUT
 from xml.dom.minidom import parse
-
 import win32api
 import win32con
-import win32gui
 import xlrd
+from bs4 import BeautifulSoup
 
 
 class Converter:
-    def __init__(self, input, exe, format='xml', timeout=60, output=None):
+    def __init__(self, input, exe, format='html', timeout=60, output=None):
         self.input = input
         self.exe = exe
         self.format = format
@@ -115,19 +115,18 @@ class Converter:
                                         file, self.output, self.format)
         thread = threading.Thread(target=self.pdf2html, args=(cmd,))
         thread.start()
-
         start_time = time.time()
         while True:
             if os.path.exists(save_path):
                 if self.check(save_path):
-                    print('%s ok!' % file)
-                    print("Time cost: %.2fs" % (time.time() - start_time))
+                    print("Convert successfully! Time cost: %.2fs" % (time.time() - start_time))
                     self.kill_tasks()
                     return save_path
                 else:
-                    print('%s fail!' % file)
+                    print('Timeout or Bad html!')
                     self.kill_tasks()
                     return None
             if time.time() - start_time > self.timeout:
+                self.kill_tasks()
                 return None
             self.blocking()

@@ -40,7 +40,7 @@ class Extractor(object):
         self.institute = []
         self.abstract = []
         self.outline = []
-        self.journal = ''
+        self.journal = []
         self.path = path
         self.file = file
         self.has_metadata = False
@@ -210,6 +210,3 @@ class Extractor(object):
         self.has_content = True
         # update outline
         self.outline = outline
-
-
-

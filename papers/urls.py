@@ -29,7 +29,7 @@ urlpatterns = [
     ),
     path(
         "process/history/admin/<adminname>/specified/",
-        UserSpecifiedHistoryView.as_view(),
+         UserSpecifiedHistoryView.as_view(),
         name="upload_history_specified",
     ),
     path("process/detail/<pk>/", PDFOperationView.as_view(), name="detail"),

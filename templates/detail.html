@@ -10,7 +10,11 @@
                 result = res['result']
                 if (result) {
                     if (operation == 'extraction') {
-                        location.reload()
+                        metadata = res['metadata']
+                        $('#metadata').append(`<h5 align="center">Metadata:</h5>`)
+                        for (var key in metadata) {
+                            $('#metadata').append(`<p class="mb-5" align="center" >${key}:${metadata[key].join(" ")}</p>`)
+                        }
                     } else if (operation == 'buildkg') {
                         location.reload()
                     }
@@ -155,40 +159,8 @@
         </div>
     </div>
 
+    <div id="metadata">
 
-
-    <div class="container-fluid" id="history" style="display: none">
-        <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-12" id="card-div">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-12 mx-auto">
-                        {% if obj.operation_set.all %}
-                            <h6 align="center">History operation: {{ obj.updated }}</h6>
-                        {% endif %}
-                    </div>
-                </div>
-
-                {% for opt in obj.operation_set.all %}
-                    <p style="display: inline;">
-                        {{ opt.type }} at {{ opt.created }}
-                    </p>
-                    <input type="checkbox" value="{{ opt.pk }}">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#operation">
-                        delete
-                    </button><br>
-                {% endfor %}
-                <div style="text-align:center;font-size: small;font-weight: bolder;">
-                    {% if obj.operation_set.all %}
-                        <button>
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#delete-operations">
-                                Delete Chosen Operations</a>
-                        </button>
-                    {% else %}
-                        <h5 align="center">No operation!</h5>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
     </div>
 
 {% endblock %}

@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -7,7 +9,10 @@ from django.views.generic import CreateView, ListView, DetailView, DeleteView
 
 from .forms import UploadForm
 from .models import Post, Operation
-import os
+
+from process.extractor import Extractor
+from process.converter import Converter
+from django.conf import settings
 
 
 def index(request):
@@ -107,18 +112,40 @@ class PDFOperationView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         operation = self.request.POST.get("operation", "")
         ids = self.request.POST.get("ids", "")
-        input_path = "." + self.get_object().cover.url
-
+        input_path = self.get_object().cover.url.lstrip('/')
+        base_dir = settings.BASE_DIR
         if operation == "extraction":
-            path = 'extraction ' + input_path
+
+            converter = Converter(input=os.path.join(base_dir, input_path),
+                                  exe=os.path.join(base_dir, 'process/PDFConvert.exe'),
+                                  format='html',
+                                  timeout=15,
+                                  output=os.path.join(base_dir, 'media/pdf/'))
+            html_name = converter.convert()
+            if html_name:
+                html_dir = os.path.dirname(html_name)
+                extractor = Extractor(path=html_dir, file=html_name)
+                extractor.get_metadata()
+                extractor.get_content()
+            else:
+                return JsonResponse({"result": False})
             opt = Operation.objects.create(
                 type="Metadata Extraction", post=self.get_object()
             )
             opt.save()
-            if path:
-                return JsonResponse({"result": True, "path": path})
+            if extractor.has_metadata or extractor.has_content:
+                metadata = {"title": extractor.title,
+                            "author": extractor.author,
+                            "institute": extractor.institute,
+                            "journal": extractor.journal,
+                            "outline": extractor.outline
+                            }
+                return JsonResponse({"result": True,
+                                     "metadata": metadata,
+                                     "content": extractor.content})
             else:
                 return JsonResponse({"result": False})
+
         elif operation == "buildkg":
             path = 'buildkg ' + input_path
             opt = Operation.objects.create(
@@ -216,6 +243,7 @@ class DeleteOptsView(LoginRequiredMixin, DeleteView):
             return JsonResponse({"result": True})
         except Exception as e:
             return JsonResponse({"result": False, "message": str(e)})
+
 
 class OptHistoryView(LoginRequiredMixin, DetailView):
     model = Post
