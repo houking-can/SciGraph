@@ -104,61 +104,10 @@ class UploadPDFView(LoginRequiredMixin, CreateView):
         )
 
 
-class PDFOperationView(LoginRequiredMixin, DetailView):
+class PreviewView(LoginRequiredMixin, DetailView):
     model = Post
-    template_name = "detail.html"
+    template_name = "preview.html"
     context_object_name = "obj"
-
-    def post(self, request, *args, **kwargs):
-        operation = self.request.POST.get("operation", "")
-        ids = self.request.POST.get("ids", "")
-        input_path = self.get_object().cover.url.lstrip('/')
-        base_dir = settings.BASE_DIR
-        if operation == "extraction":
-
-            converter = Converter(input=os.path.join(base_dir, input_path),
-                                  exe=os.path.join(base_dir, 'process/PDFConvert.exe'),
-                                  format='html',
-                                  timeout=15,
-                                  output=os.path.join(base_dir, 'media/pdf/'))
-            html_name = converter.convert()
-            if html_name:
-                html_dir = os.path.dirname(html_name)
-                extractor = Extractor(path=html_dir, file=html_name)
-                extractor.get_metadata()
-                extractor.get_content()
-            else:
-                return JsonResponse({"result": False})
-            opt = Operation.objects.create(
-                type="Metadata Extraction", post=self.get_object()
-            )
-            opt.save()
-            if extractor.has_metadata or extractor.has_content:
-                metadata = {"title": extractor.title,
-                            "author": extractor.author,
-                            "institute": extractor.institute,
-                            "journal": extractor.journal,
-                            "outline": extractor.outline
-                            }
-                return JsonResponse({"result": True,
-                                     "metadata": metadata,
-                                     "content": extractor.content})
-            else:
-                return JsonResponse({"result": False})
-
-        elif operation == "buildkg":
-            path = 'buildkg ' + input_path
-            opt = Operation.objects.create(
-                type="Build KG", post=self.get_object()
-            )
-            opt.save()
-            return JsonResponse({"result": True, "path": path})
-
-        if ids:
-            ids = ids.split(",")
-            ids = [int(id) for id in ids]
-            Operation.objects.filter(pk__in=ids).delete()
-            return JsonResponse({"result": True})
 
 
 class DeletePDFView(LoginRequiredMixin, DeleteView):
@@ -249,3 +198,58 @@ class OptHistoryView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = "history.html"
     context_object_name = "obj"
+
+
+class MetadataView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = "metadata.html"
+    context_object_name = "obj"
+    def post(self, request, *args, **kwargs):
+        input_path = self.get_object().cover.url.lstrip('/')
+        base_dir = settings.BASE_DIR
+
+
+        converter = Converter(input=os.path.join(base_dir, input_path),
+                              exe=os.path.join(base_dir, 'process/PDFConvert.exe'),
+                              format='html',
+                              timeout=15,
+                              output=os.path.join(base_dir, 'media/pdf/'))
+        html_name = converter.convert()
+        if html_name:
+            html_dir = os.path.dirname(html_name)
+            extractor = Extractor(path=html_dir, file=html_name)
+            extractor.get_metadata()
+            extractor.get_content()
+        else:
+            return JsonResponse({"result": False})
+        opt = Operation.objects.create(
+            type="Metadata Extraction", post=self.get_object()
+        )
+        opt.save()
+        if extractor.has_metadata or extractor.has_content:
+            metadata = {"title": extractor.title,
+                        "author": extractor.author,
+                        "institute": extractor.institute,
+                        "journal": extractor.journal,
+                        "outline": extractor.outline
+                        }
+            return JsonResponse({"result": True,
+                                 "metadata": metadata,
+                                 "content": extractor.content})
+        else:
+            return JsonResponse({"result": False})
+
+class BuildKGView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = "build_kg.html"
+    context_object_name = "obj"
+    def post(self, request, *args, **kwargs):
+        input_path = self.get_object().cover.url.lstrip('/')
+        base_dir = settings.BASE_DIR
+
+        opt = Operation.objects.create(
+            type="Build KG", post=self.get_object()
+        )
+        opt.save()
+        return JsonResponse({"result": True, "path": path})
+

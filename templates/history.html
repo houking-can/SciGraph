@@ -2,37 +2,16 @@
 {% load staticfiles %}
 
 {% block nav %}
-    <script>
-        function PDFProcess(operation, token) {
-            $('.probootstrap-animate.active').removeClass('active')
-            $('#nav-' + operation).addClass('active')
-            $.post("{% url 'detail' pk=obj.pk %}", {operation: operation, csrfmiddlewaretoken: token}, function success(res) {
-                result = res['result']
-                if (result) {
-                    if (operation == 'extraction') {
-                        location.reload()
-                    } else if (operation == 'buildkg') {
-                        location.reload()
-                    }
-                } else {
-                    alert("Something wrong with the operation!")
-                }
-            })
-        }
-    </script>
-
     <nav class="probootstrap-nav">
         <ul>
             <li class="probootstrap-animate" id="nav-preview" data-animate-effect="fadeInLeft">
-                <a href="{% url 'detail' pk=obj.pk %}">Preview</a>
+                <a href="{% url 'preview' pk=obj.pk %}">Preview</a>
             </li>
             <li class="probootstrap-animate" id="nav-extraction" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" name="extraction" title="{{ csrf_token }}"
-                   onclick="PDFProcess(this.name, this.title)">Metadata Extraction</a>
+                <a href="{% url 'metadata' pk=obj.pk %}">Metadata Extraction</a>
             </li>
             <li class="probootstrap-animate" id="nav-buildkg" data-animate-effect="fadeInLeft">
-                <a href="javascript:void(0);" name="buildkg" title="{{ csrf_token }}"
-                   onclick="PDFProcess(this.name, this.title)">Build KG</a>
+                <a href="{% url 'build_kg' pk=obj.pk %}">Build KG</a>
             </li>
             <li class="probootstrap-animate active" id="nav-history" data-animate-effect="fadeInLeft">
                 <a href="">Operation History</a>
@@ -55,6 +34,19 @@
 
 
 {% block card %}
+
+    <div class="container-fluid" id="title">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-12">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 mx-auto">
+                        <h5 align="center">Title: {{ obj.title }}</h5>
+                        <h6 align="center">Created at: {{ obj.created }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% for opt in obj.operation_set.all %}
         <div class="modal fade" id="operation" tabindex="0" aria-labelledby="exampleModalLabel" aria-hidden="true"

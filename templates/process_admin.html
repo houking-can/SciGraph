@@ -52,7 +52,7 @@
             delete
         </button>
         {% if post.cover %}
-        <a href="{% url 'detail' pk=post.pk %}">
+        <a href="{% url 'preview' pk=post.pk %}">
             <img class="card-img-top probootstrap-animate" src="{{ post.cover.url }}" alt="{{ post.title }}"
                 data-animate-effect="fadeIn">
         </a>

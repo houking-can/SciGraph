@@ -1,0 +1,74 @@
+{% extends 'process_base.html' %}
+{% load staticfiles %}
+
+{% block nav %}
+    <nav class="probootstrap-nav">
+        <ul>
+            <li class="probootstrap-animate" id="nav-preview" data-animate-effect="fadeInLeft">
+                <a href="{% url 'preview' pk=obj.pk %}">Preview</a>
+            </li>
+            <li class="probootstrap-animate" id="nav-extraction" data-animate-effect="fadeInLeft">
+                <a href={% url 'metadata' pk=obj.pk %}>Metadata Extraction</a>
+            </li>
+            <li class="probootstrap-animate active" id="nav-buildkg" data-animate-effect="fadeInLeft">
+                <a href="">Build KG</a>
+            </li>
+            <li class="probootstrap-animate" id="nav-history" data-animate-effect="fadeInLeft">
+                <a href="{% url 'opt_history' pk=obj.pk %}">Operation History</a>
+            </li>
+
+
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                {% if user.is_superuser %}
+                    <a href="{% url 'upload_history_admin' adminname=user.username %}">Back</a>
+                {% else %}
+                    <a href="{% url 'upload_history_user' username=user.username %}">Back</a>
+                {% endif %}
+            </li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft">
+                <a href="{% url 'logout' %}">Log Out</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+
+{% block card %}
+
+    <script>
+        function BuildKG(token) {
+            $.post("{% url 'build_kg' pk=obj.pk %}", {
+                csrfmiddlewaretoken: token
+            }, function success(res) {
+                result = res['result']
+                if (result) {
+                    alert(res['path'])
+                } else {
+                    alert("Something wrong with the operation!")
+                }
+            })
+        }
+    </script>
+
+    <div class="container-fluid" id="title">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-12">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 mx-auto">
+                        <h5 align="center">Title: {{ obj.title }}</h5>
+                        <h6 align="center">Created at: {{ obj.created }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div align="center">
+            <div align="center">
+                <button type="button" style="font-size: medium" value="{{ csrf_token }}"
+                        onclick="BuildKG(this.value);">BUILD
+                </button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

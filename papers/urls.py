@@ -5,12 +5,14 @@ from .views import (
     UserUploadHistoryView,
     AdminUploadHistoryView,
     UserSpecifiedHistoryView,
-    PDFOperationView,
+    PreviewView,
     DeletePDFView,
     DeletePDFsView,
     DeleteOptView,
     DeleteOptsView,
-    OptHistoryView
+    OptHistoryView,
+    MetadataView,
+    BuildKGView
 
 )
 
@@ -29,15 +31,15 @@ urlpatterns = [
     ),
     path(
         "process/history/admin/<adminname>/specified/",
-         UserSpecifiedHistoryView.as_view(),
+        UserSpecifiedHistoryView.as_view(),
         name="upload_history_specified",
     ),
-    path("process/detail/<pk>/", PDFOperationView.as_view(), name="detail"),
+    path("process/preview/<pk>/", PreviewView.as_view(), name="preview"),
     path("process/delete/PDF/<pk>/", DeletePDFView.as_view(), name="delete_pdf"),
     path("process/delete/PDF/", DeletePDFsView.as_view(), name="delete_pdfs"),
-    path(
-        "process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"
-    ),
-    path('process/delete/operation/', DeleteOptsView.as_view(), name="delete_opts"),
-    path("process/opt_history/<pk>/", OptHistoryView.as_view(),name="opt_history")
+    path("process/delete/operation/<pk>", DeleteOptView.as_view(), name="delete_opt"),
+    path("process/delete/operation/", DeleteOptsView.as_view(), name="delete_opts"),
+    path("process/opt_history/<pk>/", OptHistoryView.as_view(), name="opt_history"),
+    path("process/metadata/<pk>/", MetadataView.as_view(), name="metadata"),
+    path("process/build_kg/<pk>/", BuildKGView.as_view(), name="build_kg")
 ]
