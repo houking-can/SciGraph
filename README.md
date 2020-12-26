@@ -1,5 +1,5 @@
 # SciGraph
-None
+科技文献挖掘简单demo
 
 ## Dependency
 - python3.7
