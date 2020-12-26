@@ -1,5 +1,5 @@
 # SciGraph
-科技文献挖掘简单demo
+科技文献挖掘简单demo，更完整的demo体验网站：http://101.124.42.4:4999/zh-hans/
 
 ## Dependency
 - python3.7
