@@ -2,7 +2,12 @@
 None
 
 ## Dependency
+- Adobe Acrobat DC (windows) 地址:https://pan.baidu.com/s/12MzmdneyEFljSyLG8pfVYQ 提取码: kfcu
+需要用到这个工具把PDF转成XML
+
 - python3.7
+
+- pip install django==2.2.4
 
 - pip install pywin32==223
 
