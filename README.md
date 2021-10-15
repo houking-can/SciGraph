@@ -1,5 +1,5 @@
 # SciGraph
-科技文献挖掘简单demo，更完整的demo体验网站：http://101.124.42.4:4999/zh-hans/ (服务器已到期)
+科技文献挖掘简单demo，更完整的demo体验网站：https://kg.hammerscholar.net
 
 ## Dependency
 - Adobe Acrobat DC (windows) 地址:https://pan.baidu.com/s/12MzmdneyEFljSyLG8pfVYQ 提取码: kfcu
